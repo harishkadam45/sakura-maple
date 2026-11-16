@@ -1,0 +1,465 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from './Header.tsx';
+import Collections from './Collections.tsx';
+import Logo from './Logo.tsx';
+import {
+  MAPLE_LEAF_PATH,
+  MAPLE_LEAF_VIEWBOX,
+  nav,
+  products,
+  recipes,
+  retailers,
+  ui,
+  type Lang,
+} from '../data/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = ui[lang];
+const ja = lang === 'ja';
+
+const heroProduct = products.find((p) => p.id === 'sakura-375ml')!;
+const year = new Date().getFullYear();
+
+// Japanese headlines run denser than Latin text, so they get a smaller scale.
+const h1Size = ja
+  ? 'text-[32px] sm:text-5xl lg:text-[50px] xl:text-[58px]'
+  : 'text-[44px] leading-[1.08] sm:text-6xl lg:text-[68px] xl:text-[76px]';
+const h2Size = ja ? 'text-3xl sm:text-[40px]' : 'text-4xl leading-tight sm:text-5xl';
+---
+
+<Layout lang={lang}>
+  <!-- Announcement -->
+  <div class="bg-shu text-white">
+    <p
+      class="mx-auto max-w-[1320px] px-5 py-2.5 text-center text-[11px] uppercase tracking-[0.24em] sm:px-8"
+    >
+      {t.announcement}
+      <a href="#retailers" class="ml-2 underline underline-offset-4 hover:text-gold-soft"
+        >{t.findStore}</a
+      >
+    </p>
+  </div>
+
+  <Header lang={lang} client:load />
+
+  <main id="main">
+    <!-- ───────────── Hero ───────────── -->
+    <section class="relative overflow-hidden bg-surface-2 text-fg">
+      <svg
+        viewBox={MAPLE_LEAF_VIEWBOX}
+        aria-hidden="true"
+        class="pointer-events-none absolute -left-40 -bottom-48 h-[640px] w-[640px] text-fg/[0.04]"
+      >
+        <path d={MAPLE_LEAF_PATH} fill="currentColor"></path>
+      </svg>
+
+      <div
+        class="relative mx-auto grid max-w-[1320px] items-center gap-12 px-5 pb-16 pt-14 sm:px-8 lg:grid-cols-12 lg:gap-6 lg:pb-24 lg:pt-20"
+      >
+        <div class="lg:col-span-6">
+          <p class="eyebrow" data-reveal>{t.hero.eyebrow}</p>
+          <h1 class:list={['mt-7 font-display', h1Size]} data-reveal>
+            {t.hero.line1}<br />
+            <span class="text-gold">{t.hero.accent}</span>{t.hero.after}
+          </h1>
+          <p
+            class="mt-7 max-w-xl text-[17px] font-light leading-relaxed text-fg/70"
+            data-reveal
+          >
+            {t.hero.body}
+          </p>
+          <div class="mt-10 flex flex-col gap-3 sm:flex-row" data-reveal>
+            <a href="#collections" class="btn btn-solid">{t.hero.cta1}</a>
+            <a href="#retailers" class="btn btn-outline">{t.hero.cta2}</a>
+          </div>
+
+          <dl
+            class="mt-14 grid max-w-xl grid-cols-3 gap-6 border-t border-fg/10 pt-8"
+            data-reveal
+          >
+            {
+              t.hero.stats.map(([value, label]) => (
+                <div>
+                  <dt class:list={['whitespace-nowrap font-display sm:text-3xl', ja ? 'text-lg' : 'text-2xl']}>{value}</dt>
+                  <dd class="mt-1.5 text-[11px] uppercase leading-relaxed tracking-[0.18em] text-fg/50">
+                    {label}
+                  </dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+
+        <!-- Product composition -->
+        <div class="relative lg:col-span-6" data-reveal>
+          <div class="relative mx-auto w-full max-w-[560px] pb-10 pl-8 pr-6 pt-8 sm:pl-14 sm:pr-10">
+            <!-- Red sun and gold ring behind the photo -->
+            <div
+              aria-hidden="true"
+              class="absolute right-0 top-0 aspect-square w-[46%] rounded-full bg-shu"
+            >
+            </div>
+            <div
+              aria-hidden="true"
+              class="absolute -right-3 -top-4 aspect-square w-[58%] rounded-full border border-gold/30 sm:-right-4"
+            >
+            </div>
+
+            <img
+              src="/images/pancakes.webp"
+              alt={t.hero.photoAlt}
+              width="1500"
+              height="1000"
+              fetchpriority="high"
+              class="relative aspect-[4/5] w-full object-cover object-[38%_center] shadow-2xl"
+            />
+
+            <!-- Product tile overlapping the photo -->
+            <a
+              href="#collections"
+              class="group absolute bottom-0 left-0 flex w-[44%] max-w-[220px] flex-col bg-white p-4 text-ink shadow-2xl sm:p-5"
+            >
+              <img
+                src={`/images/${heroProduct.image}`}
+                alt={`${heroProduct.name[lang]} ${heroProduct.sizes[lang]}`}
+                width={heroProduct.width}
+                height={heroProduct.height}
+                class="mx-auto h-36 w-auto object-contain transition-transform duration-700 group-hover:-translate-y-1 sm:h-48"
+              />
+              <span class="mt-3 block text-[9px] uppercase tracking-[0.2em] text-gold sm:text-[10px]">
+                {heroProduct.note[lang]}
+              </span>
+              <span class="mt-1 block font-display text-[13px] leading-snug sm:text-[15px]">
+                {heroProduct.name[lang]}
+              </span>
+            </a>
+          </div>
+          <p
+            aria-hidden="true"
+            lang="ja"
+            class="absolute right-0 top-2 hidden font-display text-sm tracking-[0.5em] text-fg/40 [writing-mode:vertical-rl] sm:block"
+          >
+            {t.hero.vertical}
+          </p>
+        </div>
+      </div>
+
+      <!-- Value strip -->
+      <div class="relative border-t border-fg/10">
+        <ul
+          class="mx-auto grid max-w-[1320px] grid-cols-2 gap-x-4 px-5 text-[11px] uppercase tracking-[0.22em] text-fg/60 sm:px-8 lg:grid-cols-4"
+        >
+          {
+            t.values.map((v, i) => (
+              <li class:list={['py-5', i < 2 && 'border-b border-fg/10 lg:border-b-0']}>{v}</li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- ───────────── Collections ───────────── -->
+    <section id="collections" class="bg-surface py-20 lg:py-28">
+      <div class="mx-auto max-w-[1320px] px-5 sm:px-8">
+        <div class="flex flex-col justify-between gap-8 lg:flex-row lg:items-end" data-reveal>
+          <div>
+            <p class="eyebrow">{t.collections.eyebrow}</p>
+            <h2 class:list={['mt-5 max-w-2xl font-display', h2Size]}>{t.collections.title}</h2>
+          </div>
+          <a href="#collections" class="link-arrow text-fg hover:text-shu"
+            >{t.collections.viewAll}</a
+          >
+        </div>
+        <div class="mt-12" data-reveal>
+          <Collections lang={lang} client:visible />
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── Story ───────────── -->
+    <section id="story" class="bg-surface-2 py-20 lg:py-28">
+      <div class="mx-auto grid max-w-[1320px] gap-14 px-5 sm:px-8 lg:grid-cols-12 lg:gap-10">
+        <div class="lg:col-span-6" data-reveal>
+          <p class="eyebrow">{t.story.eyebrow}</p>
+          <h2 class:list={['mt-5 font-display', h2Size]}>{t.story.title}</h2>
+          <div class="mt-8 max-w-xl space-y-5 text-[17px] font-light leading-relaxed text-fg/70">
+            <p>{t.story.p1}</p>
+            <p>{t.story.p2}</p>
+          </div>
+          <a href="#story" class="btn btn-outline mt-10">{t.story.cta}</a>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2 lg:col-span-6" data-reveal>
+          <article
+            class="relative flex min-h-[380px] flex-col justify-end overflow-hidden bg-ink p-8 text-white"
+          >
+            <img
+              src="/images/sap-tap.webp"
+              alt={t.story.canada.photoAlt}
+              width="1080"
+              height="720"
+              loading="lazy"
+              class="absolute inset-0 h-full w-full object-cover object-[30%_center]"
+            />
+            <div
+              aria-hidden="true"
+              class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/10"
+            >
+            </div>
+            <span
+              aria-hidden="true"
+              class="absolute right-5 top-2 font-display text-[150px] leading-none text-white/20"
+              >楓</span
+            >
+            <svg viewBox={MAPLE_LEAF_VIEWBOX} aria-hidden="true" class="relative h-9 w-9 text-shu">
+              <path d={MAPLE_LEAF_PATH} fill="currentColor"></path>
+            </svg>
+            <p class="relative mt-6 text-[11px] uppercase tracking-[0.28em] text-gold-soft">
+              {t.story.canada.label}
+            </p>
+            <h3 class="relative mt-2 font-display text-2xl">{t.story.canada.title}</h3>
+            <p class="relative mt-3 text-[15px] font-light leading-relaxed text-white/80">
+              {t.story.canada.body}
+            </p>
+          </article>
+          <article
+            class="relative flex min-h-[380px] flex-col justify-end overflow-hidden border border-fg/10 bg-surface p-8 sm:mt-12"
+          >
+            <span
+              aria-hidden="true"
+              class="absolute right-5 top-2 font-display text-[150px] leading-none text-fg/[0.06]"
+              >桜</span
+            >
+            <svg viewBox="-30 -30 60 60" aria-hidden="true" class="h-9 w-9 text-shu">
+              {
+                [0, 72, 144, 216, 288].map((r) => (
+                  <path
+                    transform={`rotate(${r})`}
+                    d="M0 -4 C-9 -10 -10 -20 -3 -27 L0 -23 L3 -27 C10 -20 9 -10 0 -4Z"
+                    fill="currentColor"
+                  />
+                ))
+              }
+            </svg>
+            <p class="mt-6 text-[11px] uppercase tracking-[0.28em] text-gold">
+              {t.story.japan.label}
+            </p>
+            <h3 class="mt-2 font-display text-2xl">{t.story.japan.title}</h3>
+            <p class="mt-3 text-[15px] font-light leading-relaxed text-fg/65">
+              {t.story.japan.body}
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── Retailers ───────────── -->
+    <section id="retailers" class="bg-surface py-20 lg:py-28">
+      <div class="mx-auto max-w-[1320px] px-5 sm:px-8">
+        <div class="grid gap-8 lg:grid-cols-12 lg:items-end" data-reveal>
+          <div class="lg:col-span-7">
+            <p class="eyebrow">{t.retailers.eyebrow}</p>
+            <h2 class:list={['mt-5 font-display', h2Size]}>{t.retailers.title}</h2>
+          </div>
+          <p class="text-[17px] font-light leading-relaxed text-fg/70 lg:col-span-5">
+            {t.retailers.body}
+          </p>
+        </div>
+
+        <ul
+          class="mt-12 grid border-l border-t border-fg/10 sm:grid-cols-2 lg:grid-cols-4"
+          data-reveal
+        >
+          {
+            retailers.map((r, i) => (
+              <li class="border-b border-r border-fg/10">
+                <a
+                  href={r.href}
+                  target={r.href.startsWith('http') ? '_blank' : undefined}
+                  rel={r.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  class="group flex h-full min-h-[200px] flex-col justify-between p-7 transition-colors duration-500 hover:bg-fg hover:text-surface"
+                >
+                  <span class="text-[11px] tracking-[0.24em] text-gold">0{i + 1}</span>
+                  <span>
+                    <span class="block font-display text-2xl leading-snug">{r.name[lang]}</span>
+                    <span class="mt-2 flex items-center justify-between gap-3 text-[11px] uppercase tracking-[0.2em] text-fg/50 transition-colors group-hover:text-surface/60">
+                      {r.type[lang]}
+                      <span
+                        aria-hidden="true"
+                        class="text-base transition-transform duration-300 group-hover:translate-x-1"
+                      >
+                        →
+                      </span>
+                    </span>
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+
+        <div
+          class="mt-10 flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-center"
+          data-reveal
+        >
+          <p class="text-sm text-fg/55">{t.retailers.note}</p>
+          <a href="#retailers" class="btn btn-solid shrink-0">{t.retailers.cta}</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────── Recipes ───────────── -->
+    <section id="recipes" class="bg-surface-2 py-20 lg:py-28">
+      <div class="mx-auto max-w-[1320px] px-5 sm:px-8">
+        <div class="flex flex-col justify-between gap-8 lg:flex-row lg:items-end" data-reveal>
+          <div>
+            <p class="eyebrow">{t.recipes.eyebrow}</p>
+            <h2 class:list={['mt-5 max-w-2xl font-display', h2Size]}>{t.recipes.title}</h2>
+          </div>
+          <a href="#recipes" class="link-arrow text-fg hover:text-shu">{t.recipes.viewAll}</a>
+        </div>
+
+        <ul class="mt-12 grid gap-6 md:grid-cols-3">
+          {
+            recipes.map((r) => (
+              <li data-reveal>
+                <a href="#recipes" class="group block">
+                  <div class="relative aspect-[4/5] overflow-hidden bg-ink">
+                    <img
+                      src={`/images/${r.image}`}
+                      alt={r.alt[lang]}
+                      loading="lazy"
+                      class="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+                    />
+                    <div
+                      aria-hidden="true"
+                      class="absolute inset-x-0 top-0 h-1/3 bg-gradient-to-b from-black/55 to-transparent"
+                    />
+                    <span class="absolute left-5 top-5 text-[10px] uppercase tracking-[0.28em] text-white">
+                      {r.reading[lang]}
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      class="absolute right-4 top-3 font-display text-4xl leading-none text-white"
+                    >
+                      {r.kanji}
+                    </span>
+                  </div>
+                  <p class="mt-5 text-[11px] uppercase tracking-[0.22em] text-gold">
+                    {r.meta[lang]}
+                  </p>
+                  <h3 class="mt-2 font-display text-[22px] leading-snug transition-colors group-hover:text-shu">
+                    {r.title[lang]}
+                  </h3>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
+
+    <!-- ───────────── Wholesale CTA ───────────── -->
+    <section id="wholesale" class="relative overflow-hidden border-t border-white/10 bg-ink py-20 text-white lg:py-28">
+      <div
+        aria-hidden="true"
+        class="absolute -right-40 top-1/2 hidden h-[520px] w-[520px] -translate-y-1/2 rounded-full border border-gold/20 lg:block"
+      >
+      </div>
+      <div
+        aria-hidden="true"
+        class="absolute -right-24 top-1/2 hidden h-[360px] w-[360px] -translate-y-1/2 rounded-full bg-shu/90 lg:block"
+      >
+      </div>
+      <div class="relative mx-auto grid max-w-[1320px] gap-12 px-5 sm:px-8 lg:grid-cols-12">
+        <div class="lg:col-span-7" data-reveal>
+          <p class="eyebrow">{t.wholesale.eyebrow}</p>
+          <h2 class:list={['mt-5 font-display', h2Size]}>{t.wholesale.title}</h2>
+          <p class="mt-6 max-w-xl text-[17px] font-light leading-relaxed text-white/70">
+            {t.wholesale.body}
+          </p>
+          <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+            <a href="#contact" class="btn btn-light">{t.wholesaleInquiry}</a>
+            <a href="#wholesale" class="btn btn-outline-light">{t.wholesale.cta2}</a>
+          </div>
+          <dl class="mt-14 grid max-w-xl grid-cols-3 gap-4">
+            {
+              t.wholesale.markets.map(([code, name, alt]) => (
+                <div class="border-t border-white/20 pt-5">
+                  <dt class="font-display text-3xl">{code}</dt>
+                  <dd class="mt-2 text-[11px] uppercase tracking-[0.2em] text-white/60">{name}</dd>
+                  <dd class="mt-1 text-xs tracking-[0.2em] text-gold" aria-hidden="true">
+                    {alt}
+                  </dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ───────────── Footer ───────────── -->
+  <footer id="contact" class="border-t border-white/10 bg-ink text-white">
+    <div class="mx-auto grid max-w-[1320px] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-12">
+      <div class="lg:col-span-5">
+        <Logo lang={lang} onDark />
+        <p class="mt-6 max-w-sm text-[15px] font-light leading-relaxed text-white/60">
+          {t.footer.tagline}
+        </p>
+        <a
+          href="mailto:info@sakuramaple.com"
+          class="mt-6 inline-block font-display text-xl underline decoration-gold/50 underline-offset-8 hover:text-gold"
+        >
+          info@sakuramaple.com
+        </a>
+      </div>
+      <nav aria-label={t.footer.explore} class="lg:col-span-3">
+        <p class="text-[11px] uppercase tracking-[0.28em] text-gold">{t.footer.explore}</p>
+        <ul class="mt-5 space-y-3 text-[15px] text-white/70">
+          {
+            nav.map((n) => (
+              <li>
+                <a href={n.href} class="transition-colors hover:text-white">
+                  {n.label[lang]}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+      <div class="lg:col-span-4">
+        <p class="text-[11px] uppercase tracking-[0.28em] text-gold">{t.footer.offices}</p>
+        <dl class="mt-5 grid grid-cols-2 gap-6 text-[15px] text-white/70">
+          <div>
+            <dt class="font-display text-lg text-white">{t.footer.toronto[0]}</dt>
+            <dd class="mt-1">{t.footer.toronto[1]}</dd>
+          </div>
+          <div>
+            <dt class="font-display text-lg text-white">{t.footer.sapporo[0]}</dt>
+            <dd class="mt-1">{t.footer.sapporo[1]}</dd>
+          </div>
+        </dl>
+        <a
+          href="https://www.linkedin.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="link-arrow mt-8 text-white/70 hover:text-gold">LinkedIn</a
+        >
+      </div>
+    </div>
+    <div class="border-t border-white/10">
+      <p
+        class="mx-auto flex max-w-[1320px] flex-col justify-between gap-2 px-5 py-6 text-[11px] uppercase tracking-[0.2em] text-white/40 sm:flex-row sm:px-8"
+      >
+        <span>© {year} {t.footer.rights}</span>
+        <span>{t.footer.demo}</span>
+      </p>
+    </div>
+  </footer>
+</Layout>

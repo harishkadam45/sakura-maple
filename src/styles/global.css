@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0d0c0b;
+  --color-ink-soft: #181614;
+  --color-paper: #f7f4ee;
+  --color-shu: #b4281f; /* vermilion red accent */
+  --color-gold: #b39359;
+  --color-gold-soft: #d9c7a3;
+
+  /* Theme-aware colours (light values here; dark overrides below). */
+  --color-surface: #f7f4ee; /* page background */
+  --color-surface-2: #ffffff; /* alternate sections, cards, header */
+  --color-fg: #0d0c0b; /* text and solid buttons */
+
+  --font-display: "Shippori Mincho", "Cormorant Garamond", Georgia, serif;
+  /* Jost has no Japanese glyphs, so Japanese text falls through to Zen Kaku Gothic New. */
+  --font-sans: "Jost", "Zen Kaku Gothic New", "Hiragino Sans", "Yu Gothic", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* `dark:` utilities follow the data-theme attribute set in Layout.astro. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Night theme. data-theme is set before first paint from the saved choice,
+   or from the device's light/dark setting when nothing is saved. */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --color-surface: #161412;
+  --color-surface-2: #0d0c0b;
+  --color-fg: #f3eee5;
+}
+/* Fallback when JavaScript is unavailable. */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]) {
+    color-scheme: dark;
+    --color-surface: #161412;
+    --color-surface-2: #0d0c0b;
+    --color-fg: #f3eee5;
+  }
+}
+html {
+  color-scheme: light;
+}
+body,
+header,
+section {
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Japanese typesetting: looser leading, and break lines at phrase boundaries. */
+html[lang="ja"] {
+  line-break: strict;
+}
+html[lang="ja"] :is(h1, h2, h3) {
+  line-height: 1.45;
+  word-break: auto-phrase;
+  text-wrap: balance;
+}
+html[lang="ja"] p {
+  line-height: 1.9;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    @apply bg-surface font-sans text-fg antialiased;
+  }
+  ::selection {
+    background: var(--color-shu);
+    color: #fff;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .eyebrow {
+    @apply flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.32em] text-gold;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply h-px w-8 bg-gold;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 text-[12px] font-medium uppercase tracking-[0.22em] transition-colors duration-300;
+  }
+  .btn-light {
+    @apply bg-white text-ink hover:bg-gold hover:text-ink;
+  }
+  /* Theme-aware buttons (flip with light/dark) */
+  .btn-solid {
+    @apply bg-fg text-surface-2 hover:bg-shu hover:text-white;
+  }
+  .btn-outline {
+    @apply border border-fg/25 text-fg hover:border-fg hover:bg-fg hover:text-surface-2;
+  }
+  .btn-outline-light {
+    @apply border border-white/30 text-white hover:border-gold hover:text-gold;
+  }
+  .link-arrow {
+    @apply inline-flex items-center gap-2 text-[12px] font-medium uppercase tracking-[0.22em] transition-colors duration-300;
+  }
+  .link-arrow::after {
+    content: "→";
+    @apply transition-transform duration-300;
+  }
+  .link-arrow:hover::after {
+    transform: translateX(4px);
+  }
+}
+
+/* Scroll reveal — only hides content when JS is running */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.js [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
