@@ -45,7 +45,7 @@ export const ui = {
       accent: 'refined',
       after: ' by Japanese craft.',
       body: 'Organic, 100% pure Canadian maple syrup — Grade A Amber with a rich, rounded taste — presented with the restraint and precision of Japanese food culture. Two nations, one table.',
-      photoAlt: 'A stack of pancakes with maple syrup being poured over the top',
+      photoAlt: 'Maple syrup being poured over a bowl of granola and fruit, beside a jug of milk',
       cta1: 'Explore the collection',
       cta2: 'Where to buy',
       stats: [
@@ -140,7 +140,7 @@ export const ui = {
       accent: '日本の技',
       after: 'で磨く。',
       body: 'カナダ産オーガニック・100％ピュアメープルシロップ。グレードA アンバー（リッチテイスト）の豊かな味わいを、日本の食文化ならではの繊細さと丁寧さでお届けします。二つの国を、ひとつの食卓に。',
-      photoAlt: 'メープルシロップをかけたパンケーキ',
+      photoAlt: 'ミルクピッチャーの横で、グラノーラとフルーツのボウルにメープルシロップをかけているところ',
       cta1: 'コレクションを見る',
       cta2: '取扱店を探す',
       stats: [
@@ -427,15 +427,15 @@ export const recipes: {
   meta: L;
 }[] = [
   {
-    image: 'breakfast-bowl.webp',
+    image: 'pancakes.webp',
     alt: {
-      en: 'Maple syrup being poured over a bowl of granola, fruit and yogurt',
-      ja: 'グラノーラとフルーツのボウルにメープルシロップをかけているところ',
+      en: 'A stack of pancakes with maple syrup being poured over the top',
+      ja: 'メープルシロップをかけたパンケーキ',
     },
     kanji: '朝',
     reading: { en: 'Morning', ja: '朝食' },
-    title: { en: 'Maple Granola Breakfast Bowl', ja: 'メープルグラノーラボウル' },
-    meta: { en: '10 min · Sakura Maple Amber', ja: '10分 · サクラメープル アンバー' },
+    title: { en: 'Classic Pancakes with Maple Syrup', ja: 'クラシックパンケーキ メープルシロップがけ' },
+    meta: { en: '20 min · Sakura Maple Amber', ja: '20分 · サクラメープル アンバー' },
   },
   {
     image: 'baumkuchen.webp',

@@ -43,7 +43,7 @@ for (const p of products) {
 // Photography: just resize.
 const photos = [
   { in: 'pancakes.jpg', out: 'pancakes', width: 1500 },
-  { in: 'hero-poster.jpg', out: 'breakfast-bowl', width: 1280 },
+  { in: 'hero-poster.jpg', out: 'hero-bg', width: 1280, quality: 88 },
   { in: 'lifestyle-syrup.jpg', out: 'baumkuchen', width: 800 },
   { in: 'lifestyle-kiki.jpg', out: 'sap-tap', width: 1080 },
   { in: 'cutting-board.jpg', out: 'cutting-board', width: 1400 },
@@ -51,7 +51,7 @@ const photos = [
 for (const p of photos) {
   const info = await sharp(`${SRC}/${p.in}`)
     .resize({ width: p.width, withoutEnlargement: true })
-    .webp({ quality: 80 })
+    .webp({ quality: p.quality ?? 80 })
     .toFile(`${OUT}/${p.out}.webp`);
   console.log(`${p.out}.webp  ${info.width}x${info.height}  ${(info.size / 1024).toFixed(0)} KB`);
 }
